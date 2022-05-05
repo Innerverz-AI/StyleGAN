@@ -1,13 +1,21 @@
-# Usage
+# StyleGAN - PyTorch Implementation
+PyTorch Implementation of [Karras et al., "A Style-Based Generator Architecture for Generative Adversarial Networks" (CVPR 2019)](https://arxiv.org/abs/1812.04948)
 
-## train
+## TO DO
+- [ ] Support multi-GPU
+- [ ] Support demo
 
-```
-git clone https://github.com/innerverz/CodeTemplate.git
+## Usage
 
-cd CodeTemplate
+### train
 
+``` bash
 python scripts/train.py {run_id}
-
-# ex) python scripts/train.py first_try
+# e.g. python scripts/train.py first_try
 ```
+
+## Authors
+- Yukyeong Lee
+
+## Acknowledgements
+- [rosinality/style-based-gan-pytorch](https://github.com/rosinality/style-based-gan-pytorch)
