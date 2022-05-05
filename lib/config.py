@@ -6,7 +6,10 @@ class Config(object):
     def __init__(self, dict_config=None):
         super().__init__()
         self.set_attribute(dict_config)
-
+    
+    def __getstate__(self):
+        return self.__dict__.copy() # IS THIS OK?
+    
     @staticmethod
     def from_yaml(read_path):
         with open(read_path, 'r') as stream:
