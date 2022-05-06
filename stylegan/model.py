@@ -133,7 +133,7 @@ class StyleGAN(ModelInterface):
             gen_in2 = gen_in2.squeeze(0)
 
         fake_image_D = self.G(gen_in1, scale=self.scale, alpha=self.alpha)  # use this to optimize G
-        self.dict['fake_image_D'] = fake_image_D
+        self.dict['fake_image_D'] = fake_image_D.detach()   ## IS THIS OK?
         fake_image_G = self.G(gen_in2, scale=self.scale, alpha=self.alpha)  # use this to optimize D
         self.dict['fake_image_G'] = fake_image_G
         
