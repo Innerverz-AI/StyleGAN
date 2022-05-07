@@ -6,7 +6,7 @@ from torch.utils.data import DataLoader
 from torchvision import transforms
 
 from lib import utils, checkpoint
-from lib.dataset import MultiResolutionDataset
+from lib.dataset import MultiResolutionDataset, SingleFaceDataset
 from lib.model_interface import ModelInterface
 from lib.utils import accumulate
 
@@ -220,6 +220,7 @@ class StyleGAN(ModelInterface):
         )   
 
         self.train_dataset = MultiResolutionDataset(args.path, transform, args.isMaster)
+        # self.train_dataset = SingleFaceDataset(args.train_dataset_root_list, transform, args.isMaster)
 
     def set_data_iterator(self):
         """
