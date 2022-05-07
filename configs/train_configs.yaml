@@ -2,7 +2,7 @@
 model_id: StyleGAN
 
 # multi-GPUs
-use_mGPU: False
+use_mGPU: True
 
 # validation
 use_validation: True
@@ -29,18 +29,30 @@ code_size: 512
 # batch_size: 16
 n_critic: 1
 
-gen_sample: {512: (8, 4), 1024: (4, 2)}
+gen_sample: 
+  512: [8, 4]
+  1024: [4, 2]
 
 
 phase: 600_000      # number of samples used for each training phases
 
 # batch size
 batch_default: 32
-batch: {'4': 512, '8': 256, '16': 128, '32': 64, '64': 32, '128': 32, '256': 32}
-
+batch: 
+  128: 32
+  16: 128
+  256: 32
+  32: 64
+  4: 512
+  64: 32
+  8: 256
 # learning rate
 lr_default: 0.001
-lr: {'128': 0.0015, '256': 0.002, '512': 0.003, '1024': 0.003} 
+lr:
+  128: 0.0015
+  256: 0.002
+  512: 0.003
+  1024: 0.003
 # sched: True         # use lr scheduling
 
 # image size
@@ -52,8 +64,8 @@ ckpt: None          # load from previous checkpoints
 
 # etc.
 no_from_rgb_activate: False     # use activate in from_rgb (original implementation)
-mixing: True        # use mixing regularization
-loss: wgan-gp       # class of gan loss, choices = [wgan-gp, r1]
+mixing: False        # use mixing regularization
+loss: r1       # class of gan loss, choices = [wgan-gp, r1]
 
 
 # --------- #
@@ -82,8 +94,8 @@ ckpt_cycle: 10000
 # ckpt path
 # blank is None, but None is "None"
 load_ckpt: False
-ckpt_id: test
-ckpt_step: 0
+ckpt_id:
+ckpt_step:
 # ckpt_id: run0424
 # ckpt_step: 30000
 

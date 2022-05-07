@@ -7,9 +7,6 @@ class Config(object):
         super().__init__()
         self.set_attribute(dict_config)
     
-    def __getstate__(self):
-        return self.__dict__.copy() # IS THIS OK?
-    
     @staticmethod
     def from_yaml(read_path):
         with open(read_path, 'r') as stream:
@@ -40,10 +37,10 @@ class Config(object):
             return
 
         for key in dict_config.keys():
-            if isinstance(dict_config[key], dict):
-                self.__dict__[key] = Config(dict_config[key])
-            else:
-                self.__dict__[key] = dict_config[key]
+            # if isinstance(dict_config[key], dict):
+            #     self.__dict__[key] = Config(dict_config[key])
+            # else:
+            self.__dict__[key] = dict_config[key]
 
     def keys(self):
         return self.__dict__.keys()

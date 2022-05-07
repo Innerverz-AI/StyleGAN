@@ -226,7 +226,7 @@ class StyleGAN(ModelInterface):
         self.train_dataset.resolution = self.resolution
         self.batch_size = args.batch[str(self.resolution)] if str(self.resolution) in args.batch.keys() else args.batch_default
         
-        self.train_dataloader = DataLoader(self.train_dataset, batch_size=self.batch_size, pin_memory=True, sampler=sampler, num_workers=8, drop_last=True)
+        self.train_dataloader = DataLoader(self.train_dataset, batch_size=self.batch_size, pin_memory=True, sampler=sampler, num_workers=0, drop_last=True)
         self.train_iterator = iter(self.train_dataloader)
 
     def load_next_batch(self):
