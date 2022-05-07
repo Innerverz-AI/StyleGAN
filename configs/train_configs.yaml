@@ -13,9 +13,9 @@ wandb_alert_thres: 1000
 
 # root
 train_dataset_root_list: [
-                "/media/deep3090/새 볼륨/celeba_hq",
+                # "/media/deep3090/새 볼륨/celeba_hq",
                 # '/home/compu/dataset/CelebHQ',
-                # '/home/compu/dataset/ffhq16k'
+                '/home/compu/dataset/ffhq16k'
             ]
 valid_dataset_root: 
 save_root: train_result
@@ -23,7 +23,7 @@ save_root: train_result
 # ---------- #
 # Rosinality #
 # ---------- #
-path: /home/leee/data/ffhq/   # path of specified dataset
+path: /home/leee/data/ffhq_16k_lmdb/   # path of specified dataset
 
 code_size: 512
 # batch_size: 16

@@ -5,6 +5,19 @@ import cv2
 import os
 import glob
 
+
+def requires_grad(model, flag=True):
+    for p in model.parameters():
+        p.requires_grad = flag
+
+def accumulate(model1, model2, decay=0.999):
+    par1 = dict(model1.named_parameters())
+    par2 = dict(model2.named_parameters())
+
+    for k in par1.keys():
+        par1[k].data.mul_(decay).add_(1 - decay, par2[k].data)
+
+
 def get_all_images(dataset_root_list):
     image_path_list = []
     image_num_list = []
@@ -21,10 +34,6 @@ def get_all_images(dataset_root_list):
 
     return image_path_list, image_num_list
 
-def requires_grad(model, flag=True):
-    for p in model.parameters():
-        p.requires_grad = flag
-        
 def weight_init(m):
     if isinstance(m, nn.Linear):
         m.weight.data.normal_(0, 0.001)

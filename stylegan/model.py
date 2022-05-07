@@ -8,6 +8,7 @@ from torchvision import transforms
 from lib import utils, checkpoint
 from lib.dataset import MultiResolutionDataset
 from lib.model_interface import ModelInterface
+from lib.utils import accumulate
 
 from stylegan.loss import WGANGPLoss, R1Loss
 from stylegan.nets import StyledGenerator, Discriminator
@@ -32,6 +33,9 @@ class StyleGAN(ModelInterface):
         
         self.G = StyledGenerator(args.code_size).cuda(self.gpu).train()
         self.D = Discriminator(from_rgb_activate=not args.no_from_rgb_activate).cuda(self.gpu).train()
+        if self.args.isMaster:
+            self.G_avg = StyledGenerator(args.code_size).cuda(self.gpu).eval()
+            accumulate(self.G_avg, self.G, 0)
 
     def set_loss_collector(self):
         args = self.args
@@ -103,6 +107,9 @@ class StyleGAN(ModelInterface):
         loss_G = self.loss_collector.get_loss_G(self.dict)
         utils.update_net(self.opt_G, loss_G)
 
+        if self.args.isMaster:
+            accumulate(self.G_avg, self.G)
+
         # run D
         self.run_D()
 
@@ -132,6 +139,7 @@ class StyleGAN(ModelInterface):
             gen_in1 = gen_in1.squeeze(0)
             gen_in2 = gen_in2.squeeze(0)
 
+        # with torch.no_grad():
         fake_image_D = self.G(gen_in1, scale=self.scale, alpha=self.alpha)  # use this to optimize G
         self.dict['fake_image_D'] = fake_image_D.detach()   ## IS THIS OK?
         fake_image_G = self.G(gen_in2, scale=self.scale, alpha=self.alpha)  # use this to optimize D
@@ -166,7 +174,7 @@ class StyleGAN(ModelInterface):
                 )
                 gen_in = gen_in.squeeze(0)
 
-            Y = self.G(gen_in, scale=self.scale, alpha=self.alpha)
+            Y = self.G_avg(gen_in, scale=self.scale, alpha=self.alpha)
 
         return [Y]
 
@@ -241,3 +249,28 @@ class StyleGAN(ModelInterface):
             real_image = next(self.train_iterator)
 
         return real_image.to(self.gpu)
+
+    # Override
+    def save_checkpoint(self, global_step):
+        """
+        Save model and optimizer parameters.
+        """
+        checkpoint.save_checkpoint(self.args, self.G_avg, self.opt_G, name='G', global_step=global_step)
+        checkpoint.save_checkpoint(self.args, self.D, self.opt_D, name='D', global_step=global_step)
+        
+        if self.args.isMaster:
+            print(f"\nPretrained parameters are succesively saved in {self.args.save_root}/{self.args.run_id}/ckpt/\n")
+    
+    # Override
+    def load_checkpoint(self):
+        """
+        Load pretrained parameters from checkpoint to the initialized models.
+        """
+
+        self.args.global_step = \
+        checkpoint.load_checkpoint(self.args, self.G_avg, self.opt_G, "G")
+        checkpoint.load_checkpoint(self.args, self.G, self.opt_G, "G")
+        checkpoint.load_checkpoint(self.args, self.D, self.opt_D, "D")
+
+        if self.args.isMaster:
+            print(f"Pretrained parameters are succesively loaded from {self.args.save_root}/{self.args.ckpt_id}/ckpt/")
