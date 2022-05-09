@@ -23,7 +23,7 @@ save_root: train_result
 # ---------- #
 # Rosinality #
 # ---------- #
-path: /home/leee/data/ffhq_16k_lmdb/   # path of specified dataset
+path: /home/leee/data/ffhq70k/   # path of specified dataset
 
 code_size: 512
 # batch_size: 16

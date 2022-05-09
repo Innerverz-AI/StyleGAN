@@ -90,7 +90,7 @@ class StyleGAN(ModelInterface):
             #     f'checkpoint/train_step-{ckpt_step}.model',
             # )
 
-            lr = args.lr[str(self.resolution)] if str(self.resolution) in args.lr.keys() else args.lr_default
+            lr = args.lr[self.resolution] if self.resolution in args.lr.keys() else args.lr_default
 
             self.adjust_lr(self.opt_G, lr)
             self.adjust_lr(self.opt_D, lr)
@@ -189,7 +189,7 @@ class StyleGAN(ModelInterface):
     def set_optimizers(self):
         args = self.args
         # args.lr is a dict, need to select one value
-        lr = args.lr[str(self.resolution)] if str(self.resolution) in args.lr.keys() else args.lr_default #.get(self.resolution, 0.001)
+        lr = args.lr[self.resolution] if self.resolution in args.lr.keys() else args.lr_default #.get(self.resolution, 0.001)
 
         self.opt_G = torch.optim.Adam(self.G.generator.parameters(), betas=(0.0, 0.99))
         self.opt_G.add_param_group(
@@ -233,7 +233,7 @@ class StyleGAN(ModelInterface):
 
         # sample_data() from rosinality's train.py
         self.train_dataset.resolution = self.resolution
-        self.batch_size = args.batch[str(self.resolution)] if str(self.resolution) in args.batch.keys() else args.batch_default
+        self.batch_size = args.batch[self.resolution] if self.resolution in args.batch.keys() else args.batch_default
         
         self.train_dataloader = DataLoader(self.train_dataset, batch_size=self.batch_size, pin_memory=True, sampler=sampler, num_workers=0, drop_last=True)
         self.train_iterator = iter(self.train_dataloader)
