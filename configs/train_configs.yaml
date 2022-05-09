@@ -37,15 +37,16 @@ gen_sample:
 phase: 600_000      # number of samples used for each training phases
 
 # batch size
-batch_default: 32
+batch_default: 8
 batch: 
-  128: 32
-  16: 128
-  256: 32
-  32: 64
   4: 512
-  64: 32
   8: 256
+  16: 128
+  32: 64  
+  64: 32
+  128: 16 # 32
+  256: 16 # 32
+
 # learning rate
 lr_default: 0.001
 lr:
@@ -60,7 +61,7 @@ init_size: 8        # initial image size
 max_size: 1024      # max image isze
 
 # checkpoint
-ckpt: None          # load from previous checkpoints
+# ckpt: None          # load from previous checkpoints
 
 # etc.
 no_from_rgb_activate: False     # use activate in from_rgb (original implementation)
