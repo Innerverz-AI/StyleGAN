@@ -56,7 +56,7 @@ class StyleGAN(ModelInterface):
         self.alpha = min(1, 1 / args.phase * (self.used_sample + 1))
 
         # No previous scale jumps
-        if (self.resolution == args.init_size and args.ckpt is None) or self.final_progress:
+        if (self.resolution == args.init_size and not args.load_ckpt) or self.final_progress:
             self.alpha = 1
 
         # Look at 'args.phase * 2' samples at each scale
@@ -256,7 +256,8 @@ class StyleGAN(ModelInterface):
         """
         Save model and optimizer parameters.
         """
-        checkpoint.save_checkpoint(self.args, self.G_avg, self.opt_G, name='G', global_step=global_step)
+        checkpoint.save_checkpoint(self.args, self.G_avg, self.opt_G, name='G_avg', global_step=global_step)
+        checkpoint.save_checkpoint(self.args, self.G, self.opt_G, name='G', global_step=global_step)
         checkpoint.save_checkpoint(self.args, self.D, self.opt_D, name='D', global_step=global_step)
         
         if self.args.isMaster:
@@ -269,7 +270,7 @@ class StyleGAN(ModelInterface):
         """
 
         self.args.global_step = \
-        checkpoint.load_checkpoint(self.args, self.G_avg, self.opt_G, "G")
+        checkpoint.load_checkpoint(self.args, self.G_avg, self.opt_G, "G_avg")
         checkpoint.load_checkpoint(self.args, self.G, self.opt_G, "G")
         checkpoint.load_checkpoint(self.args, self.D, self.opt_D, "D")
 
